@@ -1,7 +1,7 @@
 import {
   AgentKit,
   cdpApiActionProvider,
-  cdpSmartWalletActionProvider,
+  // cdpSmartWalletActionProvider,
   erc20ActionProvider,
   pythActionProvider,
   CdpSmartWalletProvider,
@@ -102,8 +102,8 @@ export async function prepareAgentkitAndWalletProvider(): Promise<{
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       owner: owner as any,
       address: walletData?.smartWalletAddress,
-      paymasterUrl: process.env.PAYMASTER_URL || "", // Sponsor transactions: https://docs.cdp.coinbase.com/paymaster/docs/welcome
-      rpcUrl: process.env.RPC_URL,
+      // paymasterUrl: process.env.PAYMASTER_URL || "", // Sponsor transactions: https://docs.cdp.coinbase.com/paymaster/docs/welcome
+      // rpcUrl: process.env.RPC_URL,
       idempotencyKey: process.env.IDEMPOTENCY_KEY,
     });
 
@@ -116,7 +116,7 @@ export async function prepareAgentkitAndWalletProvider(): Promise<{
         walletActionProvider(),
         erc20ActionProvider(),
         cdpApiActionProvider(),
-        cdpSmartWalletActionProvider(),
+        // cdpSmartWalletActionProvider(),
       ],
     });
 
