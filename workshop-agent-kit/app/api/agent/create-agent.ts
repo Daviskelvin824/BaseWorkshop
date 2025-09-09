@@ -42,32 +42,32 @@ export async function createAgent(): Promise<
     return agent;
   }
 
-  if (!process.env.OPENAI_API_KEY) {
-    throw new Error(
-      "I need an OPENAI_API_KEY in your .env file to power my intelligence."
-    );
-  }
-
-  // if (!process.env.GOOGLE_API_KEY) {
+  // if (!process.env.OPENAI_API_KEY) {
   //   throw new Error(
-  //     "I need a GOOGLE_API_KEY in your .env file to power my intelligence."
+  //     "I need an OPENAI_API_KEY in your .env file to power my intelligence."
   //   );
   // }
+
+  if (!process.env.GOOGLE_API_KEY) {
+    throw new Error(
+      "I need a GOOGLE_API_KEY in your .env file to power my intelligence."
+    );
+  }
 
   const { agentkit, walletProvider } = await prepareAgentkitAndWalletProvider();
 
   try {
     // Initialize LLM: https://platform.openai.com/docs/models#gpt-4o
-    const llm = new ChatOpenAI({
-      model: "gpt-4o-mini",
-      apiKey: process.env.OPENAI_API_KEY,
-    });
-
-    // const llm = new ChatGoogleGenerativeAI({
-    //   model: "gemini-2.0-flash", // or "gemini-1.5-flash" if you want faster/cheaper
-    //   apiKey: process.env.GOOGLE_API_KEY,
-    //   temperature: 0.7,
+    // const llm = new ChatOpenAI({
+    //   model: "gpt-4o-mini",
+    //   apiKey: process.env.OPENAI_API_KEY,
     // });
+
+    const llm = new ChatGoogleGenerativeAI({
+      model: "gemini-2.0-flash", // or "gemini-1.5-flash" if you want faster/cheaper
+      apiKey: process.env.GOOGLE_API_KEY,
+      temperature: 0.7,
+    });
 
     const tools = await getLangChainTools(agentkit);
     const memory = new MemorySaver();

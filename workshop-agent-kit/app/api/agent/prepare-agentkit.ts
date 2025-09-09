@@ -3,11 +3,13 @@ import {
   cdpApiActionProvider,
   // cdpSmartWalletActionProvider,
   erc20ActionProvider,
+  erc721ActionProvider,
   pythActionProvider,
   CdpSmartWalletProvider,
   walletActionProvider,
   WalletProvider,
   wethActionProvider,
+  
 } from "@coinbase/agentkit";
 import * as fs from "fs";
 import { Address, Hex, LocalAccount } from "viem";
@@ -116,6 +118,7 @@ export async function prepareAgentkitAndWalletProvider(): Promise<{
         walletActionProvider(),
         erc20ActionProvider(),
         cdpApiActionProvider(),
+        erc721ActionProvider(),
         // cdpSmartWalletActionProvider(),
       ],
     });

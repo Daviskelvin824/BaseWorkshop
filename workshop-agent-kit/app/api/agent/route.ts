@@ -19,7 +19,7 @@ import { createAgent } from "./create-agent";
  * });
  */
 export async function POST(
-  req: Request & { json: () => Promise<AgentRequest> },
+  req: Request & { json: () => Promise<AgentRequest> }
 ): Promise<NextResponse<AgentResponse>> {
   try {
     // 1️. Extract user message from the request body
@@ -31,7 +31,7 @@ export async function POST(
     // 3.Start streaming the agent's response
     const stream = await agent.stream(
       { messages: [{ content: userMessage, role: "user" }] }, // The new message to send to the agent
-      { configurable: { thread_id: "AgentKit Discussion" } }, // Customizable thread ID for tracking conversations
+      { configurable: { thread_id: "AgentKit Discussion" } } // Customizable thread ID for tracking conversations
     );
 
     // 4️. Process the streamed response chunks into a single message
