@@ -9,7 +9,6 @@ import {
   walletActionProvider,
   WalletProvider,
   wethActionProvider,
-  
 } from "@coinbase/agentkit";
 import * as fs from "fs";
 import { Address, Hex, LocalAccount } from "viem";
@@ -126,13 +125,19 @@ export async function prepareAgentkitAndWalletProvider(): Promise<{
     // Save wallet data
     if (!walletData) {
       const exportedWallet = await walletProvider.exportWallet();
-      fs.writeFileSync(
-        WALLET_DATA_FILE,
-        JSON.stringify({
-          ownerAddress: exportedWallet.ownerAddress,
-          smartWalletAddress: exportedWallet.address,
-        } as WalletData)
-      );
+
+      // Only write to file in local dev
+      if (process.env.NODE_ENV === "development") {
+        fs.writeFileSync(
+          WALLET_DATA_FILE,
+          JSON.stringify({
+            ownerAddress: exportedWallet.ownerAddress,
+            smartWalletAddress: exportedWallet.address,
+          } as WalletData)
+        );
+      } else {
+        console.log("Running on read-only FS, skipping wallet_data.txt write.");
+      }
     }
 
     return { agentkit, walletProvider };
