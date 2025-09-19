@@ -1,0 +1,18 @@
+[submodule "solidity101/basedtoken-contract/lib/forge-std"]
+	path = solidity101/basedtoken-contract/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "solidity101/basedtoken-contract/lib/openzeppelin-contracts"]
+	path = solidity101/basedtoken-contract/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "solidity101/basedcertificate-contract/lib/forge-std"]
+	path = solidity101/basedcertificate-contract/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "solidity101/basedcertificate-contract/lib/openzeppelin-contracts"]
+	path = solidity101/basedcertificate-contract/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "solidity101/basedbadge-contract/lib/forge-std"]
+	path = solidity101/basedbadge-contract/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "solidity101/basedbadge-contract/lib/openzeppelin-contracts"]
+	path = solidity101/basedbadge-contract/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
