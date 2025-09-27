@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 
 import {
@@ -15,8 +16,10 @@ import {
   EthBalance,
 } from "@coinbase/onchainkit/identity";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export function Header() {
+  const router = useRouter();
   return (
     <header className="py-4 p-4 bg-main">
       <div className="flex items-center justify-between">
@@ -26,14 +29,15 @@ export function Header() {
           width={60}
           height={60}
           className="cursor-pointer z-50"
+          onClick={() => router.push("/")}
         />
-        <div className="wallet-container">
+        <div className="wallet-container z-50">
           <Wallet>
             <ConnectWallet>
               <Avatar className="h-6 w-6" />
               <Name />
             </ConnectWallet>
-            <WalletDropdown>
+            <WalletDropdown className="z-100">
               <Identity hasCopyAddressOnClick>
                 <Avatar />
                 <Name />

@@ -19,17 +19,24 @@ import {
 } from "@coinbase/onchainkit/transaction";
 import { useCallback, useMemo, useState } from "react";
 import { ContractFunctionParameters } from "viem";
-import { useChainId, useReadContract, useReadContracts } from "wagmi";
+import {
+  useAccount,
+  useChainId,
+  useReadContract,
+  useReadContracts,
+} from "wagmi";
 import { useRouter } from "next/navigation";
 import { decodeEventLog } from "viem";
 import { ADDRESS_RPS } from "@/lib/token-address";
 import Image from "next/image";
 
 export default function App() {
+  const { address, isConnected } = useAccount();
   const chainId = useChainId();
   const router = useRouter();
   const [joinId, setJoinId] = useState<string>("");
   const [page, setPage] = useState<number>(1);
+  const [myPage, setMyPage] = useState<number>(1);
   const pageSize = 4;
 
   const createGameContracts = useMemo(
@@ -136,11 +143,34 @@ export default function App() {
       .filter((game) => game && Number(game.status) === 0);
   }, [allGames]);
 
-  // Pagination
+  // My games (where user is player1 or player2)
+  const myGames = useMemo(() => {
+    if (!isConnected || !address || !allGames) return [];
+    return allGames
+      .map((g, i) => {
+        if (!g?.result) return null;
+        return { id: i + 1, ...(g.result as any) };
+      })
+      .filter(
+        (game) =>
+          game &&
+          (game.player1?.toLowerCase() === address.toLowerCase() ||
+            game.player2?.toLowerCase() === address.toLowerCase())
+      );
+  }, [isConnected, address, allGames]);
+
+  // Pagination for Waiting Rooms
   const totalPages = Math.ceil(waitingGames.length / pageSize);
   const paginatedGames = waitingGames.slice(
     (page - 1) * pageSize,
     page * pageSize
+  );
+
+  // Pagination for My Rooms
+  const myTotalPages = Math.ceil(myGames.length / pageSize);
+  const paginatedMyGames = myGames.slice(
+    (myPage - 1) * pageSize,
+    myPage * pageSize
   );
 
   const formatAddress = (addr: string) => {
@@ -216,9 +246,72 @@ export default function App() {
         </DialogContent>
       </Dialog>
 
+      {/* My Room Section */}
+      <div className="w-full mt-5">
+        <h1 className="text-2xl text-left mb-3">My Room</h1>
+        {!isConnected ? (
+          <p className="text-gray-600">Please connect your wallet first.</p>
+        ) : paginatedMyGames.length === 0 ? (
+          <p className="text-gray-600">You have not joined any rooms yet.</p>
+        ) : (
+          <>
+            <div className="grid grid-cols-2 gap-4">
+              {paginatedMyGames.map((game) => (
+                <Card
+                  key={game.id}
+                  className="rounded-2xl shadow-md hover:shadow-lg transition"
+                >
+                  <CardHeader>
+                    <CardTitle className="text-black">
+                      Game #{game.id}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex flex-col gap-2">
+                    <p className="text-sm">
+                      <strong>Player1:</strong> {formatAddress(game.player1)}
+                    </p>
+                    <p className="text-sm">
+                      <strong>Player2:</strong> {formatAddress(game.player2)}
+                    </p>
+                    <Button
+                      onClick={() => router.push(`room/${game.id}`)}
+                      variant={"neutral"}
+                      className="w-full bg-blue-100 text-black"
+                    >
+                      View Room
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Pagination Controls */}
+            {myTotalPages > 1 && (
+              <div className="flex justify-center gap-4 my-4">
+                <Button
+                  disabled={myPage === 1}
+                  onClick={() => setMyPage((p) => p - 1)}
+                >
+                  Prev
+                </Button>
+                <span className="self-center">
+                  Page {myPage} of {myTotalPages}
+                </span>
+                <Button
+                  disabled={myPage === myTotalPages}
+                  onClick={() => setMyPage((p) => p + 1)}
+                >
+                  Next
+                </Button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
       {/* Waiting Rooms Section */}
       <div className="w-full mt-5">
-        <h1 className="text-2xl text-left mb-3">Waiting Rooms</h1>
+        <h1 className="text-2xl text-left mb-3">Available Rooms</h1>
         {paginatedGames.length === 0 ? (
           <p className="text-gray-600">No waiting games right now.</p>
         ) : (
@@ -238,12 +331,24 @@ export default function App() {
                   <p className="text-sm">
                     <strong>Player2:</strong> {formatAddress(game.player2)}
                   </p>
-                  <Button
-                    onClick={() => router.push(`room/${game.id}`)}
-                    variant={"neutral"}
-                    className="w-full bg-blue-100 text-black"
-                  >
-                    View Room
+                  <Button asChild className="bg-blue-100">
+                    <Transaction
+                      calls={[
+                        {
+                          address: ADDRESS_RPS,
+                          abi: RPS_ABI,
+                          functionName: "joinGame",
+                          args: [BigInt(game.id)], // ✅ use this game's id
+                        },
+                      ]}
+                      chainId={chainId}
+                      onSuccess={() => router.push(`room/${game.id}`)} // ✅ redirect into the right room
+                    >
+                      <TransactionButton
+                        className="bg-transparent opacity-100 hover:bg-transparent active:bg-transparent"
+                        text={"Join Game"}
+                      />
+                    </Transaction>
                   </Button>
                 </CardContent>
               </Card>
