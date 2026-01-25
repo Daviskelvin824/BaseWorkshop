@@ -16,3 +16,9 @@
 [submodule "solidity101/basedbadge-contract/lib/openzeppelin-contracts"]
 	path = solidity101/basedbadge-contract/lib/openzeppelin-contracts
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "rpsgame-contract/lib/forge-std"]
+	path = rpsgame-contract/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "rpsgame-contract/lib/openzeppelin-contracts"]
+	path = rpsgame-contract/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts

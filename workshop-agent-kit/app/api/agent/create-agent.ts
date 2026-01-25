@@ -50,7 +50,7 @@ export async function createAgent(): Promise<
 
   if (!process.env.GOOGLE_API_KEY) {
     throw new Error(
-      "I need a GOOGLE_API_KEY in your .env file to power my intelligence."
+      "I need a GOOGLE_API_KEY in your .env file to power my intelligence.",
     );
   }
 
@@ -64,7 +64,7 @@ export async function createAgent(): Promise<
     // });
 
     const llm = new ChatGoogleGenerativeAI({
-      model: "gemini-2.0-flash", // or "gemini-1.5-flash" if you want faster/cheaper
+      model: "gemini-2.5-flash", // or "gemini-1.5-flash" if you want faster/cheaper
       apiKey: process.env.GOOGLE_API_KEY,
       temperature: 0.7,
     });
